@@ -1,7 +1,7 @@
-# NLP Preprocessing
-Python Library for Natural Language Preprocessing 
+# PreNLP
+Preprocessing Library for Natural Language Processing
 
 ## Installation
 ```
-pip install nlp-preprocessing
+pip install prenlp
 ```

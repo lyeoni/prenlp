@@ -1,19 +1,24 @@
+import prenlp
 import setuptools
 
-__version__ = '0.0.1'
+with open('README.md', encoding='utf-8') as reader:
+    long_description = reader.read()
 
 setuptools.setup(
-    name                = 'nlp-preprocessing',
-    version             = __version__,
-    author              = 'Hoyeon Lee',
-    author_email        = 'lyeoni.g@gmail.com',
+    name                = 'prenlp',
+    version             = prenlp.__version__,
+    author              = prenlp.__author__,
+    author_email        = prenlp.__email__,
+    description         = 'Preprocessing Library for Natural Language Processing',
+    long_description    = long_description,
     url                 = 'https://github.com/lyeoni/nlp-preprocessing',
-    install_requires    = [],
     packages            = setuptools.find_packages(),
-    keywords            = 'NLP',
-    python_requires     = '>=3.5',
+    install_requires    = [],
     package_data        = {},
-    zip_safe            = False,
+    keywords            = [
+        'nlp',
+        'text-preprocessing'
+    ],
     classifiers         = [
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
