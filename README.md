@@ -17,6 +17,6 @@ from prenlp.data.normalization import *
 >>> url_normalize('Visit this link for more details: https://github.com/', repl='[URL]')
 Visit this link for more details: [URL]
 
->>> tag_normalize('Use HTML with the desired attributes: <img src="cat.jpg" height="100" />', repl='')
->>> Use HTML with the desired attributes:
+>>> tag_normalize('Use HTML with the desired attributes: <img src="cat.jpg" height="100" />', repl='[TAG]')
+>>> Use HTML with the desired attributes: [TAG]
 ```
