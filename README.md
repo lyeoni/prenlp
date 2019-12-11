@@ -18,5 +18,8 @@ from prenlp.data.normalization import *
 Visit this link for more details: [URL]
 
 >>> tag_normalize('Use HTML with the desired attributes: <img src="cat.jpg" height="100" />', repl='[TAG]')
->>> Use HTML with the desired attributes: [TAG]
+Use HTML with the desired attributes: [TAG]
+
+>>> emoji_normalize('Hello  🤩, I love you 💓 !')
+Hello  [EMOJI], I love you [EMOJI] !
 ```
