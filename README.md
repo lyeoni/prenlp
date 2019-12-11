@@ -29,3 +29,8 @@ Contact me at [EMAIL]
 >>> tel_normalize('Call +82 10-1234-5678', repl='[TEL]')
 Call [TEL]
 ```
+
+## Author
+- Hoyeon Lee @lyeoni
+- email : lyeoni.g@gmail.com
+- facebook : https://www.facebook.com/lyeoni.f
