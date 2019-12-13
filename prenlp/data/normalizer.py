@@ -4,12 +4,12 @@ class Normalizer():
     """Normalizer return the text replaced with 'repl'.
     If 'repl' is None, normalization is not applied to the pattern corresponding to 'repl'.
 
-        Args:
-            url_repl (str): replace all urls in text with this
-            tag_repl (str): replace all tags in text with this
-            emoji_repl (str): replace all emojis in text with this
-            email_repl (str): replace all emails in text with this
-            tel_repl (str): replace all tels in text with this
+    Args:
+        url_repl (str): replace all urls in text with this
+        tag_repl (str): replace all tags in text with this
+        emoji_repl (str): replace all emojis in text with this
+        email_repl (str): replace all emails in text with this
+        tel_repl (str): replace all tels in text with this
     """
     def __init__(self, url_repl='[URL]', tag_repl='[TAG]', emoji_repl='[EMOJI]', email_repl='[EMAIL]', tel_repl='[TEL]'):       
         # repls

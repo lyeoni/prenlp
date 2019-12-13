@@ -15,7 +15,7 @@ pip install prenlp
 
 ### Data
 
-#### [Dataset Loading](https://github.com/lyeoni/prenlp/blob/develop/prenlp/data/dataset.py)
+#### [Dataset Loading](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/dataset.py)
 Popular datasets for NLP tasks are provided in prenlp.
 - Text Classification: IMDB, NSMC 
 
@@ -28,9 +28,13 @@ General use cases (for IMDB) are as follows:
 ("Minor Spoilers<br /><br />Alison Parker (Cristina Raines) is a successful top model, living with the lawyer Michael Lerman (Chris Sarandon) in his apartment. She tried to commit ...", 'pos')
 ```
 
-#### Normalization
+#### [Normalization](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/normalizer.py)
+Frequently used normalization functions for text pre-processing are provided in prenlp.
+> url, HTML tag, emoticon, email, phone number, etc.
+
+General use cases (for Moses tokenizer) are as follows:
 ```python
->>> from prenlp.data.normalizer import Normalizer
+>>> from prenlp.data import Normalizer
 >>> normalizer = Normalizer()
 
 >>> normalizer.normalize('Visit this link for more details: https://github.com/')
@@ -47,6 +51,18 @@ Contact me at [EMAIL]
 
 >>> normalizer.normalize('Call +82 10-1234-5678')
 Call [TEL]
+```
+
+### [Tokenizer](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
+Frequently used tokenizers for text pre-processing are provided in prenlp.
+> NLTKMosesTokenizer
+
+General use cases (for Moses tokenizer) are as follows:
+```python
+>>> from prenlp.tokenizer import NLTKMosesTokenizer
+>>> tokenizer = NLTKMosesTokenizer()
+>>> tokenizer('PreNLP package provides a variety of text preprocessing tools.')
+['PreNLP', 'package', 'provides', 'a', 'variety', 'of', 'text', 'preprocessing', 'tools', '.']
 ```
 
 ## Author
