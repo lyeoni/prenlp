@@ -1,4 +1,9 @@
 # PreNLP
+[![PyPI](https://img.shields.io/pypi/v/prenlp.svg?style=flat-square&color=important)](https://pypi.org/project/prenlp/)
+[![License](https://img.shields.io/github/license/lyeoni/prenlp?style=flat-square)](https://github.com/lyeoni/prenlp/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/lyeoni/prenlp?style=flat-square)](https://github.com/lyeoni/prenlp/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/lyeoni/prenlp?style=flat-square&color=blueviolet)](https://github.com/lyeoni/prenlp/network/members)
+
 Preprocessing Library for Natural Language Processing
 
 ## Installation
