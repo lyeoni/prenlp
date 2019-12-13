@@ -1,29 +1,17 @@
 import re
 
 class Normalizer():
-    """Normalizer return the text replaced with 'repl'
+    """Normalizer return the text replaced with 'repl'.
+    If 'repl' is None, normalization is not applied to the pattern corresponding to 'repl'.
 
         Args:
-            url (bool): Whether to normalize urls
-            tag (bool): Whether to normalize tags
-            emoji (bool): Whether to normalize emojis
-            email (bool): Whether to normalize emails
-            tel (bool): Whether to normalize tels
-            # repls
             url_repl (str): replace all urls in text with this
             tag_repl (str): replace all tags in text with this
             emoji_repl (str): replace all emojis in text with this
             email_repl (str): replace all emails in text with this
             tel_repl (str): replace all tels in text with this
     """
-    def __init__(self, url=True, tag=True, emoji=True, email=True, tel=True,
-                    url_repl='[URL]', tag_repl='[TAG]', emoji_repl='[EMOJI]', email_repl='[EMAIL]', tel_repl='[TEL]'):
-        self.url = url
-        self.tag = tag
-        self.emoji = emoji
-        self.email = email
-        self.tel = tel
-        
+    def __init__(self, url_repl='[URL]', tag_repl='[TAG]', emoji_repl='[EMOJI]', email_repl='[EMAIL]', tel_repl='[TEL]'):       
         # repls
         self.url_repl = url_repl
         self.tag_repl = tag_repl
@@ -32,15 +20,15 @@ class Normalizer():
         self.tel_repl = tel_repl
 
     def normalize(self, text):
-        if self.url:
+        if self.url_repl is not None:
             text = self._url_normalize(text, repl=self.url_repl)
-        if self.tag:
+        if self.tag_repl is not None:
             text = self._tag_normalize(text, repl=self.tag_repl)
-        if self.emoji:
+        if self.emoji_repl is not None:
             text = self._emoji_normalize(text, repl=self.emoji_repl)
-        if self.email:
+        if self.email_repl is not None:
             text = self._email_normalize(text, repl=self.email_repl)
-        if self.tel:
+        if self.tel_repl is not None:
             text = self._tel_normalize(text, repl=self.tel_repl)
             
         return text
