@@ -62,7 +62,7 @@ class IMDB(Dataset):
                 for file in files:
                     with open(file, 'r', encoding='utf-8') as reader:
                         text = reader.readline()
-                        sample = (text, label)
+                        sample = [text, label]
                         samples.append(sample)
             dataset.append(samples)
         
@@ -110,7 +110,7 @@ class NSMC(Dataset):
                 for line in reader.readlines()[1:]: # not include column names
                     _line = line.strip().split('\t')
                     text, label = _line[1], int(_line[2])
-                    sample = (text, label)
+                    sample = [text, label]
                     samples.append(sample)
             dataset.append(samples)
 
