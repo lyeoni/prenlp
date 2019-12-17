@@ -1,1 +1,1 @@
-from .tokenizer import NLTKMosesTokenizer
+from .tokenizer import *
