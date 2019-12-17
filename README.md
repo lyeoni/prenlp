@@ -7,6 +7,13 @@
 Preprocessing Library for Natural Language Processing
 
 ## Installation
+### Requirements
+- Python >= 3.6 
+- Mecab morphological analyzer for Korean
+  - `sh scripts/install_mecab.sh`
+    
+### With pip
+prenlp can be installed using pip as follows:
 ```
 pip install prenlp
 ```
