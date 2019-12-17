@@ -1,9 +1,9 @@
 # Examples
 
-## Text Classification
+### Text Classification
 
-### fastText on IMDB
-Based on the [`fasttext_imdb.py`]().
+#### fastText on IMDB
+Based on the [`fasttext_imdb.py`](https://github.com/lyeoni/prenlp/blob/master/examples/fasttext_imdb.py).
 
 The following example code **trains fastText classification model on IMDB**.
 The code below has only 16 lines of code (except blank lines and comments).
