@@ -15,7 +15,8 @@ setuptools.setup(
     url                             = 'https://github.com/lyeoni/prenlp',
     packages                        = setuptools.find_packages(),
     install_requires                = [
-        'nltk==3.2.5', 'konlpy'                   # Tokenizer
+        'nltk==3.2.5', 'konlpy',                   # Tokenizer
+        'fasttext'                                 # Model
     ],
     package_data                    = {},
     keywords                        = [

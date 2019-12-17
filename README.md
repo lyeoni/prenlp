@@ -10,7 +10,12 @@ Preprocessing Library for Natural Language Processing
 ### Requirements
 - Python >= 3.6 
 - Mecab morphological analyzer for Korean
-  - `sh scripts/install_mecab.sh`
+  ```
+  sh scripts/install_mecab.sh
+  # only for Mac OS users, run the code below before run install_mecab.sh script.
+  # export MACOSX_DEPLOYMENT_TARGET=10.10
+  # CFLAGS='-stdlib=libc++' pip install konlpy
+  ```
     
 ### With pip
 prenlp can be installed using pip as follows:
@@ -39,7 +44,7 @@ General use cases (for IMDB) are as follows:
 Frequently used normalization functions for text pre-processing are provided in prenlp.
 > url, HTML tag, emoticon, email, phone number, etc.
 
-General use cases (for Moses tokenizer) are as follows:
+General use cases are as follows:
 ```python
 >>> from prenlp.data import Normalizer
 >>> normalizer = Normalizer()
@@ -62,7 +67,7 @@ Call [TEL]
 
 ### [Tokenizer](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
 Frequently used tokenizers for text pre-processing are provided in prenlp.
-> NLTKMosesTokenizer
+> NLTKMosesTokenizer, Mecab
 
 General use cases (for Moses tokenizer) are as follows:
 ```python
