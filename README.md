@@ -66,15 +66,27 @@ Call [TEL]
 ```
 
 ### [Tokenizer](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
-Frequently used tokenizers for text pre-processing are provided in prenlp.
-> NLTKMosesTokenizer, Mecab
+Frequently used (subword) tokenizers for text pre-processing are provided in prenlp.
+> SentencePiece, NLTKMosesTokenizer, Mecab
 
-General use cases (for Moses tokenizer) are as follows:
+General use cases for **SentencePiece** are as follows:
+```python
+>>> from prenlp.tokenizer import SentencePiece
+>>> tokenizer = SentencePiece()
+>>> tokenizer.train(input='corpus.txt', model_prefix='sentencepiece', vocab_size=10000)
+>>> tokenizer.load('sentencepiece.model')
+>>> tokenizer('Time is the most valuable thing a man can spend.') # same with tokenizer.tokenize('Time is the most valuable thing a man can spend.')
+['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.']
+>>> tokenizer.detokenize(['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.'])
+Time is the most valuable thing a man can spend.
+```
+
+General use cases for **Moses tokenizer** are as follows:
 ```python
 >>> from prenlp.tokenizer import NLTKMosesTokenizer
 >>> tokenizer = NLTKMosesTokenizer()
->>> tokenizer('PreNLP package provides a variety of text preprocessing tools.')
-['PreNLP', 'package', 'provides', 'a', 'variety', 'of', 'text', 'preprocessing', 'tools', '.']
+>>> tokenizer('Time is the most valuable thing a man can spend.')
+['Time', 'is', 'the', 'most', 'valuable', 'thing', 'a', 'man', 'can', 'spend', '.']
 ```
 
 ## Author
