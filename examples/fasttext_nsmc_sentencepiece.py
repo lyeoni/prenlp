@@ -3,7 +3,7 @@ import prenlp
 from prenlp.data import Normalizer
 from prenlp.tokenizer import SentencePiece
 
-# Data Preparation
+# Data preparation
 nsmc_train, nsmc_test = prenlp.data.NSMC()
 
 # Corpus preparation for training SentencePiece
@@ -16,7 +16,7 @@ with open(corpus_path, 'w', encoding='utf-8') as writer:
 tokenizer = SentencePiece()
 tokenizer.train(input=corpus_path, model_prefix='sentencepiece', vocab_size=10000)
 tokenizer.load('sentencepiece.model')
-normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=None, email_repl=' ', tel_repl=' ')
+normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=' ', email_repl=' ', tel_repl=' ')
 
 for dataset in [nsmc_train, nsmc_test]:
     for i, (text, label) in enumerate(dataset):

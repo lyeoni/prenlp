@@ -3,7 +3,7 @@ import prenlp
 from prenlp.data import Normalizer
 from prenlp.tokenizer import Mecab
 
-# Data Preparation
+# Data preparation
 nsmc_train, nsmc_test = prenlp.data.NSMC()
 
 # Preprocessing
