@@ -69,7 +69,7 @@ Call [TEL]
 Frequently used (subword) tokenizers for text pre-processing are provided in prenlp.
 > SentencePiece, NLTKMosesTokenizer, Mecab
 
-General use cases for **SentencePiece** are as follows:
+#### SentencePiece
 ```python
 >>> from prenlp.tokenizer import SentencePiece
 >>> tokenizer = SentencePiece()
@@ -81,7 +81,7 @@ General use cases for **SentencePiece** are as follows:
 Time is the most valuable thing a man can spend.
 ```
 
-General use cases for **Moses tokenizer** are as follows:
+#### Moses tokenizer
 ```python
 >>> from prenlp.tokenizer import NLTKMosesTokenizer
 >>> tokenizer = NLTKMosesTokenizer()

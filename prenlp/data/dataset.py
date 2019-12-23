@@ -3,7 +3,7 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
-class Dataset():
+class Dataset:
     """Abstract dataset class for dataset-like object, like list and array.
     All datasets(sub-classes) should inherit.
 

@@ -1,6 +1,6 @@
 import re
 
-class Normalizer():
+class Normalizer:
     """Normalizer return the text replaced with 'repl'.
     If 'repl' is None, normalization is not applied to the pattern corresponding to 'repl'.
 
