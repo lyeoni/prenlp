@@ -28,5 +28,4 @@ print(model.test('nsmc.train'))
 print(model.test('nsmc.test'))
 
 # Inference
-print(nsmc_test[0][0])
 print(model.predict(nsmc_test[0][0]))
