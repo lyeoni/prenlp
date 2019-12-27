@@ -3,7 +3,7 @@ import zipfile
 import tarfile
 from pathlib import Path
 
-def fasttext_transform(data, filename: str, label_prefix: str = '__label__') -> None:
+def fasttext_transform(data, filename: str, label_prefix: str='__label__') -> None:
     """fastText style data transformation.
     Args:
         data (list, tuple): dataset-like object to be transformed. It should be in following format,

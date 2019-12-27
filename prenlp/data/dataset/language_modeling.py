@@ -20,7 +20,7 @@ class WikiText2(Dataset):
     3
     >>> train, valid, test = prenlp.data.WikiText2()
     >>> len(train), len(valid), len(test)
-    23767 2461 2891
+    (23767, 2461, 2891)
     >>> train[0]
     = Valkyria Chronicles III =
     """
@@ -70,7 +70,7 @@ class WikiText103(Dataset):
     3
     >>> train, valid, test = prenlp.data.WikiText103()
     >>> len(train), len(valid), len(test)
-    1165029 2461 2891
+    (1165029, 2461, 2891)
     >>> train[0]
     = Valkyria Chronicles III =
     """

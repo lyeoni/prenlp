@@ -30,11 +30,11 @@ pip install prenlp
 #### [Dataset Loading](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/dataset.py)
 Popular datasets for NLP tasks are provided in prenlp.
 - Language Modeling: WikiText-2, WikiText-103
-- Sentiment Analysis: IMDB, NSMC
+- Sentiment Analysis: IMDb, NSMC
 
 General use cases are as follows:
 
-##### WikiText-2 / WikiText-103
+##### [WikiText-2 / WikiText-103](https://github.com/lyeoni/prenlp/blob/develop/prenlp/data/dataset/language_modeling.py)
 ```python
 >>> wikitext2 = prenlp.data.WikiText2()
 >>> len(wikitext2)
@@ -44,7 +44,7 @@ General use cases are as follows:
 '= Valkyria Chronicles III ='
 ```
 
-##### IMDB
+##### [IMDB](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/dataset/sentiment.py)
 ```python
 >>> imdb_train, imdb_test = prenlp.data.IMDB()
 >>> imdb_train[0]
