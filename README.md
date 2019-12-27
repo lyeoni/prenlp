@@ -29,15 +29,26 @@ pip install prenlp
 
 #### [Dataset Loading](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/dataset.py)
 Popular datasets for NLP tasks are provided in prenlp.
-- Text Classification: IMDB, NSMC 
+- Language Modeling: WikiText-2, WikiText-103
+- Sentiment Analysis: IMDB, NSMC
 
-General use cases (for IMDB) are as follows:
+General use cases are as follows:
+
+##### WikiText-2 / WikiText-103
+```python
+>>> wikitext2 = prenlp.data.WikiText2()
+>>> len(wikitext2)
+3
+>>> train, valid, test = prenlp.data.WikiText2()
+>>> train[0]
+'= Valkyria Chronicles III ='
+```
+
+##### IMDB
 ```python
 >>> imdb_train, imdb_test = prenlp.data.IMDB()
->>> len(imdb_train), len(imdb_test)
-25000 25000
 >>> imdb_train[0]
-("Minor Spoilers<br /><br />Alison Parker (Cristina Raines) is a successful top model, living with the lawyer Michael Lerman (Chris Sarandon) in his apartment. She tried to commit ...", 'pos')
+["Minor Spoilers<br /><br />Alison Parker (Cristina Raines) is a successful top model, living with the lawyer Michael Lerman (Chris Sarandon) in his apartment. She tried to commit ...", 'pos']
 ```
 
 #### [Normalization](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/normalizer.py)

@@ -1,3 +1,3 @@
-from .dataset import IMDB, NSMC
-from .normalizer import Normalizer
+from .dataset import *
+from .normalizer import *
 from .utils import *
