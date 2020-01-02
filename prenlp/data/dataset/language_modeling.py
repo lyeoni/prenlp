@@ -1,6 +1,9 @@
+import os
+import json
 from pathlib import Path
 
 from .base import Dataset
+from ..utils import download_from_url
 
 class WikiText2(Dataset):
     """WikiText-2 word-level dataset for language modeling.
@@ -99,4 +102,65 @@ class WikiText103(Dataset):
                     samples = [line.strip() for line in reader.readlines()]
                 dataset.append(samples)
         
+        return dataset
+
+
+class WikiTextKo(Dataset):
+    """Wikipedia database dump (Korean) for language modeling.
+
+    From:
+        Wikipedia, https://dumps.wikimedia.org/kowiki/
+    
+    Args:
+        root (str): path to the dataset's highest level directory
+    
+    Examples:
+    >>> wikitextko = prenlp.data.WikiTextKo()
+    >>> len(wikitextko)
+    2334771
+    >>> wikitextko[0]
+    '지미 카터'
+    >>> wikitextko[1]
+    '제임스 얼 "지미" 카터 주니어(, 1924년 10월 1일 ~ )는 민주당 출신 미국 39번째 대통령 (1977년 ~ 1981년)이다.'
+    """
+
+    def __init__(self, root: str='.data'):
+        self.url = 'https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2'
+        self.root = Path(root)
+        self.dirname = 'wikitext-ko'
+        
+        # WikiExtractor
+        self.url_wikiextractor = 'https://raw.githubusercontent.com/attardi/wikiextractor/master/WikiExtractor.py'
+        self.wikiextractor = 'WikiExtractor.py'
+
+        if not (self.root/self.dirname).exists():
+            self._download(to_path = self.root)
+
+        super(WikiTextKo, self).__init__(self._get_data())
+    
+    def _download(self, to_path: str) -> None:
+        """Override method of 'Dataset' class.
+        """
+        download_filename = self.url.split('/')[-1]
+        from_path = download_from_url(self.url, download_filename, to_path)
+        
+        # Extracts and cleans text from a Wikipedia database dump using WikiExtractor.
+        # WikiExtractor: https://github.com/attardi/wikiextractor
+        wikiextractor_path = download_from_url(self.url_wikiextractor, self.wikiextractor, to_path)
+        os.system(f'python {self.root/self.wikiextractor} -o {to_path/self.dirname} --json {from_path}')
+        
+    def _get_data(self) -> list:
+        dataset = []
+        filenames = [str(filename) for filename in (self.root/self.dirname).glob('**/wiki_*')]
+        for filename in sorted(filenames):
+            with open(filename, 'r', encoding='utf-8') as reader:
+                for line in reader.readlines(): # line = a document
+                    text = json.loads(line)['text']
+                    # split document into sentences(len > 0)
+                    samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
+                    dataset += samples
+                    # If sample is a document, use below code not above two lines.
+                    # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
+                    # dataset.append(sample)
+
         return dataset

@@ -27,9 +27,9 @@ pip install prenlp
 
 ### Data
 
-#### [Dataset Loading](https://github.com/lyeoni/prenlp/blob/master/prenlp/data/dataset.py)
+#### Dataset Loading
 Popular datasets for NLP tasks are provided in prenlp.
-- Language Modeling: WikiText-2, WikiText-103
+- Language Modeling: WikiText-2, WikiText-103, WikiText-ko
 - Sentiment Analysis: IMDb, NSMC
 
 General use cases are as follows:
@@ -76,11 +76,11 @@ Contact me at [EMAIL]
 Call [TEL]
 ```
 
-### [Tokenizer](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
+### Tokenizer
 Frequently used (subword) tokenizers for text pre-processing are provided in prenlp.
 > SentencePiece, NLTKMosesTokenizer, Mecab
 
-#### SentencePiece
+#### [SentencePiece](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
 ```python
 >>> from prenlp.tokenizer import SentencePiece
 >>> tokenizer = SentencePiece()
@@ -92,7 +92,7 @@ Frequently used (subword) tokenizers for text pre-processing are provided in pre
 Time is the most valuable thing a man can spend.
 ```
 
-#### Moses tokenizer
+#### [Moses tokenizer](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
 ```python
 >>> from prenlp.tokenizer import NLTKMosesTokenizer
 >>> tokenizer = NLTKMosesTokenizer()
