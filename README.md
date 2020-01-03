@@ -104,14 +104,14 @@ Time is the most valuable thing a man can spend.
 Below figure shows the classification accuracy from various tokenizer.
 - Code: [NLTKMosesTokenizer](https://github.com/lyeoni/prenlp/blob/master/examples/fasttext_imdb.py), [SentencePiece](https://github.com/lyeoni/prenlp/blob/master/examples/fasttext_imdb_sentencepiece.py)
 <p align="center">
-<img width="350" src="https://github.com/lyeoni/prenlp/tree/master/images/tokenizer_comparison_IMDb.png" align="middle">
+<img width="700" src="https://raw.githubusercontent.com/lyeoni/prenlp/master/images/tokenizer_comparison_IMDb.png" align="middle">
 </p>
 
 #### Comparisons with tokenizers on NSMC (Korean IMDb)
 Below figure shows the classification accuracy from various tokenizer.
 - Code: [Mecab](https://github.com/lyeoni/prenlp/blob/master/examples/fasttext_nsmc.py), [SentencePiece](https://github.com/lyeoni/prenlp/blob/master/examples/fasttext_nsmc_sentencepiece.py)
 <p align="center">
-<img width="350" src="https://github.com/lyeoni/prenlp/tree/master/images/tokenizer_comparison_NSMC.png" align="middle">
+<img width="700" src="https://raw.githubusercontent.com/lyeoni/prenlp/master/images/tokenizer_comparison_NSMC.png" align="middle">
 </p>
 
 ## Author
