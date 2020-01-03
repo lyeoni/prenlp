@@ -1,4 +1,5 @@
 import os
+import json
 import ijson
 from pathlib import Path
 
@@ -155,7 +156,7 @@ class WikiTextKo(Dataset):
         for filename in sorted(filenames):
             with open(filename, 'r', encoding='utf-8') as reader:
                 for line in reader.readlines(): # line = a document
-                    text = json.loads(line)['text']
+                    text = json.loads(line)['text'].strip()
                     # split document into sentences(len > 0)
                     samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
                     dataset += samples
@@ -205,7 +206,8 @@ class NamuWikiKo(Dataset):
                 # split document into sentences(len > 0)
                 samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
                 dataset += samples
+                # If sample is a document, use below code not above two lines.
+                # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
+                # dataset.append(sample)
         
         return dataset
-        
-            

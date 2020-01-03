@@ -3,20 +3,24 @@ import prenlp
 from prenlp.data import Normalizer
 from prenlp.tokenizer import SentencePiece
 
+VOCAB_SIZE = 15000
+normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=None, email_repl=' ', tel_repl=' ')
+
 # Data preparation
 imdb_train, imdb_test = prenlp.data.IMDB()
 
 # Corpus preparation for training SentencePiece
 corpus_path = 'corpus.txt'
 with open(corpus_path, 'w', encoding='utf-8') as writer:
-    for text, label in imdb_train:
-        writer.write(text.strip()+'\n')
+    wikitext2 = prenlp.data.WikiText2()
+    for dataset in wikitext2:
+        for text in dataset:
+            writer.write(text.strip()+'\n')
 
 # Preprocessing
 tokenizer = SentencePiece()
-tokenizer.train(input=corpus_path, model_prefix='sentencepiece', vocab_size=10000)
+tokenizer.train(input=corpus_path, model_prefix='sentencepiece', vocab_size=VOCAB_SIZE)
 tokenizer.load('sentencepiece.model')
-normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=' ', email_repl=' ', tel_repl=' ')
 
 for dataset in [imdb_train, imdb_test]:
     for i, (text, label) in enumerate(dataset):
@@ -26,11 +30,12 @@ prenlp.data.fasttext_transform(imdb_train, 'imdb.train')
 prenlp.data.fasttext_transform(imdb_test, 'imdb.test')
          
 # Train
-model = fasttext.train_supervised(input='imdb.train', epoch=20)
+model = fasttext.train_supervised(input='imdb.train', epoch=25)
 
 # Evaluate
 print(model.test('imdb.train'))
 print(model.test('imdb.test'))
 
 # Inference
+print(imdb_test[0][0])
 print(model.predict(imdb_test[0][0]))

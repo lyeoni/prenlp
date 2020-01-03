@@ -3,13 +3,13 @@ import prenlp
 from prenlp.data import Normalizer
 from prenlp.tokenizer import Mecab
 
+normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=None, email_repl=' ', tel_repl=' ')
+
 # Data preparation
 nsmc_train, nsmc_test = prenlp.data.NSMC()
 
 # Preprocessing
 tokenizer = Mecab()
-normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=' ', email_repl=' ', tel_repl=' ')
-
 for dataset in [nsmc_train, nsmc_test]:
     for i, (text, label) in enumerate(dataset):
         dataset[i][0] = ' '.join(tokenizer(normalizer.normalize(text.strip()))) # both
@@ -21,11 +21,12 @@ prenlp.data.fasttext_transform(nsmc_train, 'nsmc.train')
 prenlp.data.fasttext_transform(nsmc_test, 'nsmc.test')
          
 # Train
-model = fasttext.train_supervised(input='nsmc.train', epoch=20)
+model = fasttext.train_supervised(input='nsmc.train', epoch=25)
 
 # Evaluate
 print(model.test('nsmc.train'))
 print(model.test('nsmc.test'))
 
 # Inference
+print(nsmc_test[0][0])
 print(model.predict(nsmc_test[0][0]))
