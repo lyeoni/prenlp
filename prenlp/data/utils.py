@@ -1,3 +1,4 @@
+import os
 import requests
 import zipfile
 import tarfile
@@ -51,9 +52,11 @@ def unzip_archive(from_path: str, to_path: str) -> Path:
     if extenstion == '.zip':
         with zipfile.ZipFile(from_path, 'r') as zfile:
             zfile.extractall(to_path)
-    elif extenstion == '.tar.gz' or '.tgz':
+    elif extenstion == '.tar.gz' or extenstion == '.tgz':
         with tarfile.open(from_path, 'r:gz') as tgfile:
             for tarinfo in tgfile:
                 tgfile.extract(tarinfo, to_path)
-    
+    elif extenstion == '.7z':
+        os.system(f'7z x {from_path} -o{to_path}')
+
     return Path(to_path)

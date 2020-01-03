@@ -16,7 +16,8 @@ setuptools.setup(
     packages                        = setuptools.find_packages(),
     install_requires                = [
         'nltk==3.2.5', 'konlpy', 'sentencepiece',   # Tokenizer
-        'fasttext'                                  # Model
+        'fasttext',                                 # Model
+        'ijson'                                     # Utils
     ],
     package_data                    = {},
     keywords                        = [

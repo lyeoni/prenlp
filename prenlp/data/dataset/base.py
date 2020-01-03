@@ -24,5 +24,4 @@ class Dataset:
         """
         download_filename = self.url.split('/')[-1]
         from_path = download_from_url(self.url, download_filename, to_path)
-
         unzip_archive(from_path, to_path)

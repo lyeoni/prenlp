@@ -29,7 +29,7 @@ pip install prenlp
 
 #### Dataset Loading
 Popular datasets for NLP tasks are provided in prenlp.
-- Language Modeling: WikiText-2, WikiText-103, WikiText-ko
+- Language Modeling: WikiText-2, WikiText-103, WikiText-ko, NamuWiki-ko
 - Sentiment Analysis: IMDb, NSMC
 
 General use cases are as follows:

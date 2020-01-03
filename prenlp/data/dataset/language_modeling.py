@@ -1,5 +1,5 @@
 import os
-import json
+import ijson
 from pathlib import Path
 
 from .base import Dataset
@@ -164,3 +164,48 @@ class WikiTextKo(Dataset):
                     # dataset.append(sample)
 
         return dataset
+
+class NamuWikiKo(Dataset):
+    """NamuWiki database dump (Korean) for language modeling.
+
+    From:
+        NamuWiki, https://namu.wiki/w/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4:%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4%20%EB%8D%A4%ED%94%84
+    
+    Args:
+        root (str): path to the dataset's highest level directory
+    
+    Examples:
+    >>> namuwikiko = prenlp.data.NamuWikiKo()
+    >>> len(namuwikiko)
+    32362607
+    >>> namuwikiko[2]
+    '([[신 세계수의 미궁 2]]에서 뜬 !!아앗!!)'
+    >>> namuwikiko[3]
+    '{{{+1 ！！ああっと！！ }}}'
+    >>> namuwikiko[4]
+    '[[세계수의 미궁 시리즈]]에 전통으로 등장하는 대사. [[세계수의 미궁 2 제왕의 성배|2편 제왕의 성배]]부터 등장했으며, 훌륭한 [[사망 플래그]]의 예시이다.'
+    """
+
+    def __init__(self, root: str='.data'):
+        self.url = 'https://dataserver.xyz/wikidb/namuwiki190312.7z'
+        self.root = Path(root)
+        self.dirname = 'namuwiki_20190312.json'
+
+        if not (self.root/self.dirname).exists():
+            super(NamuWikiKo, self)._download(to_path = self.root)
+        
+        super(NamuWikiKo, self).__init__(self._get_data())
+        
+    def _get_data(self) -> list:
+        dataset = []
+        with open(self.root/self.dirname, 'r', encoding='utf-8') as jfile:
+            for item in ijson.items(jfile, 'item'):
+                # title = item['title'].strip()
+                text = item['text'].strip()
+                # split document into sentences(len > 0)
+                samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
+                dataset += samples
+        
+        return dataset
+        
+            
