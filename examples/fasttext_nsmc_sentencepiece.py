@@ -4,7 +4,7 @@ from prenlp.data import Normalizer
 from prenlp.tokenizer import SentencePiece
 
 VOCAB_SIZE = 30000
-normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=None, email_repl=' ', tel_repl=' ')
+normalizer = Normalizer(emoji_repl=None)
 
 # Data preparation
 nsmc_train, nsmc_test = prenlp.data.NSMC()

@@ -1,10 +1,12 @@
 import os
+import re
 import json
 import ijson
 from pathlib import Path
 
 from .base import Dataset
 from ..utils import download_from_url
+from ..normalizer import Normalizer
 
 class WikiText2(Dataset):
     """WikiText-2 word-level dataset for language modeling.
@@ -179,35 +181,78 @@ class NamuWikiKo(Dataset):
     >>> namuwikiko = prenlp.data.NamuWikiKo()
     >>> len(namuwikiko)
     32362607
-    >>> namuwikiko[2]
-    '([[신 세계수의 미궁 2]]에서 뜬 !!아앗!!)'
-    >>> namuwikiko[3]
-    '{{{+1 ！！ああっと！！ }}}'
-    >>> namuwikiko[4]
-    '[[세계수의 미궁 시리즈]]에 전통으로 등장하는 대사. [[세계수의 미궁 2 제왕의 성배|2편 제왕의 성배]]부터 등장했으며, 훌륭한 [[사망 플래그]]의 예시이다.'
+    >>> namuwikiko[0]
+    (신 세계수의 미궁 2에서 뜬 !!아앗!!)
+    >>> namuwikiko[1]
+    세계수의 미궁 시리즈에 전통으로 등장하는 대사. 세계수의 미궁 2 제왕의 성배|2편 제왕의 성배부터 등장했으며, 훌륭한 사망 플래그의 예시이다.
     """
 
     def __init__(self, root: str='.data'):
         self.url = 'https://dataserver.xyz/wikidb/namuwiki190312.7z'
         self.root = Path(root)
         self.dirname = 'namuwiki_20190312.json'
+        self.normalize_dirname = 'namuwiki_20190312'
 
         if not (self.root/self.dirname).exists():
             super(NamuWikiKo, self)._download(to_path = self.root)
         
-        super(NamuWikiKo, self).__init__(self._get_data())
+        if not (self.root/self.normalize_dirname).exists():
+            # Save normalized dataset
+            with open(self.root/self.normalize_dirname, 'w', encoding='utf-8') as writer:
+                dataset = self._get_data()
+                for text in dataset:
+                    writer.write(text+'\n')
+            super(NamuWikiKo, self).__init__(dataset)
+        else:
+            with open(self.root/self.normalize_dirname, 'r', encoding='utf-8') as reader:
+                super(NamuWikiKo, self).__init__(reader.readlines())
         
     def _get_data(self) -> list:
         dataset = []
         with open(self.root/self.dirname, 'r', encoding='utf-8') as jfile:
             for item in ijson.items(jfile, 'item'):
-                # title = item['title'].strip()
-                text = item['text'].strip()
+                text = self._normalize(item['text']).strip()
                 # split document into sentences(len > 0)
                 samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
                 dataset += samples
                 # If sample is a document, use below code not above two lines.
                 # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
                 # dataset.append(sample)
-        
+
         return dataset
+    
+    def _normalize(self, text: str, repl: str='') -> str:
+        """Return the normalized string.
+        """
+        regexs = [
+                # macro
+                r'\[+(?:[iI]nclude|youtube|분류|목차|각주|파일).*\]+',
+                r'\#redirect[ \t]*.*', # e.g. #redirect blah
+                # markup
+                r"'''",                 # bold
+                r'~~(?!~).*?~~',        # deletion
+                r'--(?!~).*?--',        # deletion
+                r'\|\|.*\|\|',          # table
+                r'\{\{\{.*?\}\}\}',     # plain text {{{blah}}}
+                r'^(\{\{\{.*)',         # incomplete-plain text {{{blah
+                r'^(\}\}\})',           # }}}
+                r'^([ \t]+\*).*',       # unordered list (*)
+                r'[ \t]1\..*',          # unordered list (1.)
+                r'\|\|',                # quote (multiple)
+                r'\{\{\|',              # quote (multiple)
+                r'\|\}\}',              # quote (multiple)
+                r'^\>',                 # quote (sinlge))
+                r'width=',
+                # special markup - should follow above markup
+                r'(?:\[\[)\S*?\|',      # hyperlink with alias (open)
+                r'(?:\[\[)',            # hyperlink (open)
+                r'(?:\]\])',            # hyperlink (close)
+                r'\[\*(.*?)\]'          # footnote. It should follow the hyperlink patterns.
+                ]
+        for regex in regexs:
+            regex = re.compile(regex, re.MULTILINE)
+            text = regex.sub(repl, text)
+        
+        normalizer = Normalizer(emoji_repl=None)
+        text = normalizer.normalize(text)
+        return text

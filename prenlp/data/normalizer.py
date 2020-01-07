@@ -11,13 +11,14 @@ class Normalizer:
         email_repl (str): replace all emails in text with this
         tel_repl (str): replace all tels in text with this
     """
-    def __init__(self, url_repl='[URL]', tag_repl='[TAG]', emoji_repl='[EMOJI]', email_repl='[EMAIL]', tel_repl='[TEL]'):
+    def __init__(self, url_repl=' ', tag_repl=' ', emoji_repl=' ', email_repl=' ', tel_repl=' ', image_repl=' '):
         # repls
         self.url_repl = url_repl
         self.tag_repl = tag_repl
         self.emoji_repl = emoji_repl
         self.email_repl = email_repl
         self.tel_repl = tel_repl
+        self.image_repl = image_repl
         
         self._normalize = []
         self._init_normalize()
@@ -47,6 +48,8 @@ class Normalizer:
             self._normalize.append((self._email_normalize, self.email_repl))
         if self.tel_repl is not None:
             self._normalize.append((self._tel_normalize, self.tel_repl))
+        if self.image_repl is not None:
+            self._normalize.append((self._image_normalize, self.image_repl))
 
     def _url_normalize(self, text: str, repl: str, regex=re.compile(r'(https?|ftp|www)\S+')) -> str:
         """Return the string obtained by replacing all urls in 'text' by the replacement 'repl'.
@@ -92,6 +95,15 @@ class Normalizer:
         Args:
             text (str): text to be replaced
             repl (str): replace all phone numbers in text with 'repl'
+        """
+        text = regex.sub(repl, text)
+        return text
+
+    def _image_normalize(self, text: str, repl: str, regex=re.compile(r'\S+.(jpg|jpeg|png|gif)')) -> str:
+        """Return the string obtained by replacing all image file names in 'text' by the replacement 'repl'.
+        Args:
+            text (str): text to be replaced
+            repl (str): replace all image file names in text with 'repl'
         """
         text = regex.sub(repl, text)
         return text
