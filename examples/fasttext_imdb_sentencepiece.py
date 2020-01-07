@@ -3,8 +3,8 @@ import prenlp
 from prenlp.data import Normalizer
 from prenlp.tokenizer import SentencePiece
 
-VOCAB_SIZE = 15000
-normalizer = Normalizer(url_repl=' ', tag_repl=' ', emoji_repl=None, email_repl=' ', tel_repl=' ')
+VOCAB_SIZE = 30000
+normalizer = Normalizer(emoji_repl=None)
 
 # Data preparation
 imdb_train, imdb_test = prenlp.data.IMDB()
@@ -15,13 +15,12 @@ with open(corpus_path, 'w', encoding='utf-8') as writer:
     wikitext2 = prenlp.data.WikiText2()
     for dataset in wikitext2:
         for text in dataset:
-            writer.write(text.strip()+'\n')
+            writer.write(normalizer.normalize(text.strip())+'\n')
 
 # Preprocessing
 tokenizer = SentencePiece()
 tokenizer.train(input=corpus_path, model_prefix='sentencepiece', vocab_size=VOCAB_SIZE)
 tokenizer.load('sentencepiece.model')
-
 for dataset in [imdb_train, imdb_test]:
     for i, (text, label) in enumerate(dataset):
         dataset[i][0] = ' '.join(tokenizer(normalizer.normalize(text.strip())))

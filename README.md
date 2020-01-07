@@ -58,22 +58,25 @@ Frequently used normalization functions for text pre-processing are provided in 
 General use cases are as follows:
 ```python
 >>> from prenlp.data import Normalizer
->>> normalizer = Normalizer()
+>>> normalizer = Normalizer(url_repl='[URL]', tag_repl='[TAG]', emoji_repl='[EMOJI]', email_repl='[EMAIL]', tel_repl='[TEL]', image_repl='[IMG]')
 
 >>> normalizer.normalize('Visit this link for more details: https://github.com/')
-Visit this link for more details: [URL]
+'Visit this link for more details: [URL]'
 
 >>> normalizer.normalize('Use HTML with the desired attributes: <img src="cat.jpg" height="100" />')
-Use HTML with the desired attributes: [TAG]
+'Use HTML with the desired attributes: [TAG]'
 
 >>> normalizer.normalize('Hello 🤩, I love you 💓 !')
-Hello [EMOJI], I love you [EMOJI] !
+'Hello [EMOJI], I love you [EMOJI] !'
 
 >>> normalizer.normalize('Contact me at lyeoni.g@gmail.com')
-Contact me at [EMAIL]
+'Contact me at [EMAIL]'
 
 >>> normalizer.normalize('Call +82 10-1234-5678')
-Call [TEL]
+'Call [TEL]'
+
+>>> normalizer.normalize('Download our logo image, logo123.png, with transparent background.')
+'Download our logo image, [IMG], with transparent background.'
 ```
 
 ### Tokenizer
