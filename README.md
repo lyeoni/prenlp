@@ -28,16 +28,18 @@ pip install prenlp
 ### Data
 
 #### Dataset Loading
+
 Popular datasets for NLP tasks are provided in prenlp.
 - Sentiment Analysis: IMDb, NSMC
 - Language Modeling: WikiText-2, WikiText-103, WikiText-ko, NamuWiki-ko
-    |Dataset|Language|Articles|Sentences|Tokens|Vocab|Size|
-    |-|-|-|-|-|-|-|
-    |WikiText-2|English|720|-|2,551,843|33,278|13.3MB|
-    |WikiText-103|English|28,595|-|103,690,236|267,735|517.4MB|
-    |WikiText-ko|Korean|477,946|2,333,930|131,184,780|662,949|667MB|
-    |NamuWiki-ko|Korean|661,032|16,288,639|715,535,778|1,130,008|3.3GB|
-    |WikiText-ko+NamuWiki-ko|Korean|1,138,978|18,622,569|846,720,558|1,360,538|3.95GB|
+
+|Dataset|Language|Articles|Sentences|Tokens|Vocab|Size|
+|-|-|-|-|-|-|-|
+|WikiText-2|English|720|-|2,551,843|33,278|13.3MB|
+|WikiText-103|English|28,595|-|103,690,236|267,735|517.4MB|
+|WikiText-ko|Korean|477,946|2,333,930|131,184,780|662,949|667MB|
+|NamuWiki-ko|Korean|661,032|16,288,639|715,535,778|1,130,008|3.3GB|
+|WikiText-ko+NamuWiki-ko|Korean|1,138,978|18,622,569|846,720,558|1,360,538|3.95GB|
 
 General use cases are as follows:
 
