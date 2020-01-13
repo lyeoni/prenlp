@@ -1,9 +1,8 @@
-import os
 import requests
 from pathlib import Path
+import py7zr
 import zipfile
 import tarfile
-from pyunpack import Archive
 
 def fasttext_transform(data, filename: str, label_prefix: str='__label__') -> None:
     """fastText style data transformation.
@@ -58,6 +57,8 @@ def unzip_archive(from_path: str, to_path: str) -> Path:
             for tarinfo in tgfile:
                 tgfile.extract(tarinfo, to_path)
     elif extenstion == '.7z':
-        Archive(from_path).extractall(to_path)
+        szfile = py7zr.SevenZipFile(from_path, mode='r')
+        szfile.extractall(path=to_path)
+        szfile.close()
 
     return Path(to_path)
