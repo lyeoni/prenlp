@@ -12,10 +12,13 @@ Preprocessing Library for Natural Language Processing
 - Mecab morphological analyzer for Korean
   ```
   sh scripts/install_mecab.sh
-  # only for Mac OS users, run the code below before run install_mecab.sh script.
+  # Only for Mac OS users, run the code below before run install_mecab.sh script.
   # export MACOSX_DEPLOYMENT_TARGET=10.10
   # CFLAGS='-stdlib=libc++' pip install konlpy
   ```
+- C++ Build tools for fastText
+  - g++ >= 4.7.2 or clang >= 3.3
+  - For **Windows**, [Visual Studio C++](https://visualstudio.microsoft.com/downloads/) is recommended.
     
 ### With pip
 prenlp can be installed using pip as follows:
