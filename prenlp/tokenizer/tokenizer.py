@@ -1,3 +1,5 @@
+from typing import List
+
 class NLTKMosesTokenizer:
     """Create the Moses Tokenizer implemented by in NLTK.
 
@@ -8,8 +10,8 @@ class NLTKMosesTokenizer:
     >>> tokenizer = prenlp.tokenizer.NLTKMosesTokenizer()
     >>> tokenizer('PreNLP package provides a variety of text preprocessing tools.')
     ['PreNLP', 'package', 'provides', 'a', 'variety', 'of', 'text', 'preprocessing', 'tools', '.']
-    >>> tokenizer('Time is the most valuable thing a man can spend.')
-    ['Time', 'is', 'the', 'most', 'valuable', 'thing', 'a', 'man', 'can', 'spend', '.']
+    >>> tokenizer.tokenize('PreNLP package provides a variety of text preprocessing tools.')
+    ['PreNLP', 'package', 'provides', 'a', 'variety', 'of', 'text', 'preprocessing', 'tools', '.']
     """
 
     def __init__(self):
@@ -21,10 +23,10 @@ class NLTKMosesTokenizer:
             nltk.download('nonbreaking_prefixes')
         self.tokenizer = MosesTokenizer()
     
-    def __call__(self, text: str) -> list:
-        return self._tokenize(text)
+    def __call__(self, text: str) -> List[str]:
+        return self.tokenize(text)
 
-    def _tokenize(self, text: str) -> list:
+    def tokenize(self, text: str) -> List[str]:
         return self.tokenizer.tokenize(text, escape=False)
 
 class Mecab:
@@ -35,12 +37,12 @@ class Mecab:
 
     Examples:
     >>> tokenizer = prenlp.tokenizer.Mecab()
-    >>> tokenizer('자연어 처리 전처리 패키지 PreNLP 많이 사랑해주세요!')
-    ['자연어', '처리', '전처리', '패키지', 'PreNLP', '많이', '사랑', '해', '주', '세요', '!']
     >>> tokenizer('모든 이야기에는 끝이 있지만, 인생에서의 모든 끝은 새로운 시작을  의미한다.')
+    ['모든', '이야기', '에', '는', '끝', '이', '있', '지만', ',', '인생', '에서', '의', '모든', '끝', '은', '새로운', '시작', '을', '의미', '한다', '.']    
+    >>> tokenizer.tokenize('모든 이야기에는 끝이 있지만, 인생에서의 모든 끝은 새로운 시작을  의미한다.')
     ['모든', '이야기', '에', '는', '끝', '이', '있', '지만', ',', '인생', '에서', '의', '모든', '끝', '은', '새로운', '시작', '을', '의미', '한다', '.']
     """
-
+    
     def __init__(self):
         try:
             from konlpy.tag import Mecab
@@ -51,10 +53,10 @@ class Mecab:
                 'You can refer to the installation guide in https://github.com/lyeoni/prenlp/blob/master/scripts/install_mecab.sh or https://bitbucket.org/eunjeon/mecab-ko-dic/src')
         self.tokenizer = Mecab()
     
-    def __call__(self, text: str) -> list:
-        return self._tokenize(text)
+    def __call__(self, text: str) -> List[str]:
+        return self.tokenize(text)
     
-    def _tokenize(self, text: str) -> list:
+    def tokenize(self, text: str) -> List[str]:
         return self.tokenizer.morphs(text)
 
 class SentencePiece:
@@ -64,9 +66,8 @@ class SentencePiece:
         https://github.com/google/sentencepiece
     
     Examples:
-    >>> tokenizer = prenlp.tokenizer.SentencePiece()
-    >>> tokenizer.train(input='corpus.txt', model_prefix='sentencepiece', vocab_size=10000)
-    >>> tokenizer.load('sentencepiece.model')
+    >>> prenlp.tokenizer.SentencePiece.train(input='corpus.txt', model_prefix='sentencepiece', vocab_size=10000)
+    >>> tokenizer = prenlp.tokenizer.SentencePiece.load('sentencepiece.model')
     >>> tokenizer('Time is the most valuable thing a man can spend.')
     ['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.']
     >>> tokenizer.tokenize('Time is the most valuable thing a man can spend.')
@@ -75,7 +76,7 @@ class SentencePiece:
     Time is the most valuable thing a man can spend.
     """
 
-    def __init__(self, model: str = None):
+    def __init__(self):
         try:
             import sentencepiece
         except ImportError:
@@ -85,15 +86,24 @@ class SentencePiece:
                 'You can refer to the official installation guide in https://github.com/google/sentencepiece')
         self.sentencepiece = sentencepiece
         self.processor = sentencepiece.SentencePieceProcessor()
-        
-        # Load model
-        if model is not None:
-            self.load(model)
 
-    def __call__(self, text: str) -> list:
+    def __call__(self, text: str) -> List[str]:
         return self.tokenize(text)
     
-    def train(self, input: str, model_prefix: str, vocab_size: int, character_coverage: float = 1.0, model_type: str = 'bpe') -> None:
+    @classmethod
+    def train(cls, input: str, model_prefix: str, vocab_size: int,
+              character_coverage: float = 1.0,
+              model_type: str = 'bpe', 
+              max_sentence_length :int = 100000,
+              pad_id: int = 0,
+              unk_id: int = 1,
+              bos_id: int = 2,
+              eos_id: int = 3,
+              pad_token: str = '[PAD]',
+              unk_token: str = '[UNK]',
+              bos_token: str = '[BOS]',
+              eos_token: str = '[EOS]',
+              user_defined_symbols: str = '[SEP],[CLS],[MASK]') -> None:
         """Train SentencePiece model.
         Args:
             input (str): one-sentence-per-line raw corpus file
@@ -104,19 +114,39 @@ class SentencePiece:
             model_type (str): model type. Choose from bpe, unigram, char, or word.
                               The input sentence must be pretokenized when using word type
         """
-        cmd = '--input={} --model_prefix={} --vocab_size={} --character_coverage={} --model_type={}'.format(
-            input, model_prefix, vocab_size, character_coverage, model_type)
-        self.sentencepiece.SentencePieceTrainer.Train(cmd)
+        template = '--input={} --model_prefix={} --vocab_size={} \
+                   --character_coverage={} \
+                   --model_type={} \
+                   --max_sentence_length={} \
+                   --pad_id={} --pad_piece={} \
+                   --unk_id={} --unk_piece={} \
+                   --bos_id={} --bos_piece={} \
+                   --eos_id={} --eos_piece={} \
+                   --user_defined_symbols={}'
+        cmd = template.format(input, model_prefix, vocab_size,
+                              character_coverage,
+                              model_type,
+                              max_sentence_length,
+                              pad_id, pad_token,
+                              unk_id, unk_token,
+                              bos_id, bos_token,
+                              eos_id, eos_token,
+                              user_defined_symbols)
+
+        cls().sentencepiece.SentencePieceTrainer.train(cmd)
     
-    def load(self, model: str) -> None:
+    @classmethod
+    def load(cls, model: str) -> 'SentencePiece':
         """Load the pre-trained SentencePiece model.
         Args:
             model (str): pre-trained sentencepiece model
         """
-        self.processor.Load(model)
+        sentencepiece = cls()
+        sentencepiece.processor.load(model)
+        return sentencepiece
     
-    def tokenize(self, text: str) -> list:
+    def tokenize(self, text: str) -> List[str]:
         return self.processor.EncodeAsPieces(text)
     
-    def detokenize(self, tokens: list) -> str:
+    def detokenize(self, tokens: List[str]) -> str:
         return self.processor.DecodePieces(tokens)
