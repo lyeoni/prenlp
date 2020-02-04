@@ -1,5 +1,60 @@
 # Examples
 
+## Setup input pipeline
+
+### Building Vocabulary
+You can easily download corpus using prenlp. Here, we use WikiText-103.
+```shell
+$ python -c "import prenlp; prenlp.data.WikiText103()"
+$ ls .data/wikitext-103/
+wiki.test.tokens  wiki.train.tokens  wiki.valid.tokens
+```
+
+Build Vocabulary based on WikiText-103 corpus, using sentencepiece subword tokenizer.
+```shell
+$ python vocab.py --corpus .data/wikitext-103/wiki.train.tokens --prefix wiki --tokenizer sentencepiece --vocab_size 16000
+```
+
+You may need to change below argument to build your own vocabulary with your corpus.
+```shell
+$ python vocab.py -h
+usage: vocab.py [-h] --corpus CORPUS --prefix PREFIX [--tokenizer TOKENIZER]
+                [--vocab_size VOCAB_SIZE]
+                [--character_coverage CHARACTER_COVERAGE]
+                [--model_type MODEL_TYPE]
+                [--max_sentence_length MAX_SENTENCE_LENGTH]
+                [--pad_token PAD_TOKEN] [--unk_token UNK_TOKEN]
+                [--bos_token BOS_TOKEN] [--eos_token EOS_TOKEN]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --corpus CORPUS       one-sentence-per-line corpus file
+  --prefix PREFIX       output vocab(or sentencepiece model) name prefix
+  --tokenizer TOKENIZER
+                        tokenizer to tokenize input corpus. available:
+                        sentencepiece, nltk_moses, mecab
+  --vocab_size VOCAB_SIZE
+                        the maximum size of the vocabulary
+  --character_coverage CHARACTER_COVERAGE
+                        amount of characters covered by the model, good
+                        defaults are: 0.9995 for languages with rich character
+                        set like Japanse or Chinese and 1.0 for other
+                        languages with small character set
+  --model_type MODEL_TYPE
+                        sentencepiece model type. Choose from unigram, bpe,
+                        char, or word
+  --max_sentence_length MAX_SENTENCE_LENGTH
+                        The maximum input sequence length
+  --pad_token PAD_TOKEN
+                        token that indicates padding
+  --unk_token UNK_TOKEN
+                        token that indicates unknown word
+  --bos_token BOS_TOKEN
+                        token that indicates beginning of sentence
+  --eos_token EOS_TOKEN
+                        token that indicates end of sentence
+```
+
 ## Text Classification
 
 ### fastText on IMDb
