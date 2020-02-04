@@ -90,6 +90,12 @@ class SentencePiece:
     def __call__(self, text: str) -> List[str]:
         return self.tokenize(text)
     
+    def tokenize(self, text: str) -> List[str]:
+        return self.processor.EncodeAsPieces(text)
+    
+    def detokenize(self, tokens: List[str]) -> str:
+        return self.processor.DecodePieces(tokens)
+
     @classmethod
     def train(cls, input: str, model_prefix: str, vocab_size: int,
               character_coverage: float = 1.0,
@@ -106,13 +112,13 @@ class SentencePiece:
               user_defined_symbols: str = '[SEP],[CLS],[MASK]') -> None:
         """Train SentencePiece model.
         Args:
-            input (str): one-sentence-per-line raw corpus file
-            model_prefix (str): output model name prefix. <model_prefix>.model and <model_prefix>.vocab are generated
-            vocab_size (int): vocabulary size 
+            input              (str): one-sentence-per-line raw corpus file
+            model_prefix       (str): output model name prefix. <model_prefix>.model and <model_prefix>.vocab are generated
+            vocab_size         (int): vocabulary size 
+            model_type         (str): model type. Choose from bpe, unigram, char, or word.
+                                      The input sentence must be pretokenized when using word type
             character_coverage (float): amount of characters covered by the model, 
                                         good defaults are: 0.9995 for languages with rich character set like Japanse or Chinese and 1.0 for other languages with small character set
-            model_type (str): model type. Choose from bpe, unigram, char, or word.
-                              The input sentence must be pretokenized when using word type
         """
         template = '--input={} --model_prefix={} --vocab_size={} \
                    --character_coverage={} \
@@ -144,9 +150,3 @@ class SentencePiece:
         sentencepiece = cls()
         sentencepiece.processor.load(model)
         return sentencepiece
-    
-    def tokenize(self, text: str) -> List[str]:
-        return self.processor.EncodeAsPieces(text)
-    
-    def detokenize(self, tokens: List[str]) -> str:
-        return self.processor.DecodePieces(tokens)

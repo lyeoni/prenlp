@@ -98,10 +98,11 @@ Frequently used (subword) tokenizers for text pre-processing are provided in pre
 #### [SentencePiece](https://github.com/lyeoni/prenlp/blob/master/prenlp/tokenizer/tokenizer.py)
 ```python
 >>> from prenlp.tokenizer import SentencePiece
->>> tokenizer = SentencePiece()
->>> tokenizer.train(input='corpus.txt', model_prefix='sentencepiece', vocab_size=10000)
->>> tokenizer.load('sentencepiece.model')
->>> tokenizer('Time is the most valuable thing a man can spend.') # same with tokenizer.tokenize('Time is the most valuable thing a man can spend.')
+>>> SentencePiece.train(input='corpus.txt', model_prefix='sentencepiece', vocab_size=10000)
+>>> tokenizer = SentencePiece.load('sentencepiece.model')
+>>> tokenizer('Time is the most valuable thing a man can spend.')
+['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.']
+>>> tokenizer.tokenize('Time is the most valuable thing a man can spend.')
 ['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.']
 >>> tokenizer.detokenize(['▁Time', '▁is', '▁the', '▁most', '▁valuable', '▁thing', '▁a', '▁man', '▁can', '▁spend', '.'])
 Time is the most valuable thing a man can spend.
