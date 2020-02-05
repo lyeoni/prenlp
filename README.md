@@ -32,7 +32,7 @@ pip install prenlp
 
 #### Dataset Loading
 
-Popular datasets for NLP tasks are provided in prenlp.
+Popular datasets for NLP tasks are provided in prenlp. All datasets is stored in `/.data` directory.
 - Sentiment Analysis: IMDb, NSMC
 - Language Modeling: WikiText-2, WikiText-103, WikiText-ko, NamuWiki-ko
 

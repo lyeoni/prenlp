@@ -2,11 +2,30 @@ import os
 import re
 import json
 import ijson
+import shutil
 from pathlib import Path
+from tqdm import tqdm
 
 from .base import Dataset
 from ..utils import download_from_url
 from ..normalizer import Normalizer
+
+def load_language_modeling(from_path: str) -> list:
+    """Load language modeling dataset.
+    """
+    dataset = []
+    with open(from_path, 'r', encoding='utf-8') as reader:
+        for line in reader.readlines():
+            dataset.append(line.strip())
+
+    return dataset
+
+def save_language_modeling(dataset: list, to_path: str):
+    """Save language modeling dataset.
+    """
+    with open(to_path, 'w', encoding='utf-8') as writer:
+        for text in dataset:
+            writer.write('{text}\n'.format(text=text))
 
 class WikiText2(Dataset):
     """WikiText-2 word-level dataset for language modeling.
@@ -32,9 +51,10 @@ class WikiText2(Dataset):
     """
 
     def __init__(self, root: str='.data'):
-        self.url = 'https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-2-v1.zip'
         self.root = Path(root)
+        self.url = 'https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-2-v1.zip'
         self.dirname = 'wikitext-2'
+        self.out_filename = ('wiki.train', 'wiki.valid', 'wiki.test')
         
         self.skip_empty = True # Whether to skip the empty samples (only for WikiText)
 
@@ -43,18 +63,31 @@ class WikiText2(Dataset):
         
         super(WikiText2, self).__init__(self._get_data())
 
-    def _get_data(self, train: str='wiki.train.tokens', valid: str='wiki.valid.tokens',
-                  test: str='wiki.test.tokens') -> list:
-        dataset = []
-        for i, data in enumerate([train, valid, test]):
-            filename = self.root/self.dirname/data
-            with open(filename, 'r', encoding='utf-8') as reader:
-                if self.skip_empty:                    
-                    samples = [line.strip() for line in reader.readlines() if line.strip()]
-                else:
-                    samples = [line.strip() for line in reader.readlines()]
-                dataset.append(samples)
-        
+    def _get_data(self, train: str='wiki.train.tokens', valid: str='wiki.valid.tokens', test: str='wiki.test.tokens') -> list:
+        out_path_train = self.root/self.dirname/self.out_filename[0]
+        out_path_valid = self.root/self.dirname/self.out_filename[1]
+        out_path_test = self.root/self.dirname/self.out_filename[2]
+
+        if out_path_train.exists() and out_path_valid.exists() and out_path_test.exists():
+            train, valid, test = load_language_modeling(out_path_train), load_language_modeling(out_path_valid), load_language_modeling(out_path_test)
+            dataset = [train, valid, test]
+        else:
+            dataset = []
+            for i, data in enumerate([train, valid, test]):
+                filename = self.root/self.dirname/data
+                with open(filename, 'r', encoding='utf-8') as reader:
+                    if self.skip_empty:                    
+                        samples = [line.strip() for line in reader.readlines() if line.strip()]
+                    else:
+                        samples = [line.strip() for line in reader.readlines()]
+                    dataset.append(samples)
+            
+            # Save dataset
+            shutil.rmtree(self.root/self.dirname)
+            (self.root/self.dirname).mkdir()
+            for i, filename in enumerate(self.out_filename):
+                save_language_modeling(dataset[i], to_path=self.root/self.dirname/filename)            
+
         return dataset
 
 
@@ -82,29 +115,43 @@ class WikiText103(Dataset):
     """
 
     def __init__(self, root: str='.data'):
-        self.url = 'https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-103-v1.zip'
         self.root = Path(root)
+        self.url = 'https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-103-v1.zip'
         self.dirname = 'wikitext-103'
+        self.out_filename = ('wiki.train', 'wiki.valid', 'wiki.test')
         
-        self.skip_empty = True # Whether to skip the empty samples (only for WikiText)
+        self.skip_empty = True # whether to skip the empty samples. only for WikiText
 
         if not (self.root/self.dirname).exists():
             super(WikiText103, self)._download(to_path = self.root)
         
         super(WikiText103, self).__init__(self._get_data())
 
-    def _get_data(self, train: str='wiki.train.tokens', valid: str='wiki.valid.tokens',
-                  test: str='wiki.test.tokens') -> list:
-        dataset = []
-        for i, data in enumerate([train, valid, test]):
-            filename = self.root/self.dirname/data
-            with open(filename, 'r', encoding='utf-8') as reader:
-                if self.skip_empty:                    
-                    samples = [line.strip() for line in reader.readlines() if line.strip()]
-                else:
-                    samples = [line.strip() for line in reader.readlines()]
-                dataset.append(samples)
-        
+    def _get_data(self, train: str='wiki.train.tokens', valid: str='wiki.valid.tokens', test: str='wiki.test.tokens') -> list:
+        out_path_train = self.root/self.dirname/self.out_filename[0]
+        out_path_valid = self.root/self.dirname/self.out_filename[1]
+        out_path_test = self.root/self.dirname/self.out_filename[2]
+
+        if out_path_train.exists() and out_path_valid.exists() and out_path_test.exists():
+            train, valid, test = load_language_modeling(out_path_train), load_language_modeling(out_path_valid), load_language_modeling(out_path_test)
+            dataset = [train, valid, test]
+        else:
+            dataset = []
+            for i, data in enumerate([train, valid, test]):
+                filename = self.root/self.dirname/data
+                with open(filename, 'r', encoding='utf-8') as reader:
+                    if self.skip_empty:                    
+                        samples = [line.strip() for line in reader.readlines() if line.strip()]
+                    else:
+                        samples = [line.strip() for line in reader.readlines()]
+                    dataset.append(samples)
+                
+            # Save dataset
+            shutil.rmtree(self.root/self.dirname)
+            (self.root/self.dirname).mkdir()
+            for i, filename in enumerate(self.out_filename):
+                save_language_modeling(dataset[i], to_path=self.root/self.dirname/filename)            
+
         return dataset
 
 
@@ -113,6 +160,7 @@ class WikiTextKo(Dataset):
 
     From:
         Wikipedia, https://dumps.wikimedia.org/kowiki/
+        WikiExtractor, https://github.com/attardi/wikiextractor
     
     Args:
         root (str): path to the dataset's highest level directory
@@ -120,7 +168,7 @@ class WikiTextKo(Dataset):
     Examples:
     >>> wikitextko = prenlp.data.WikiTextKo()
     >>> len(wikitextko)
-    2334771
+    2350940
     >>> wikitextko[0]
     '지미 카터'
     >>> wikitextko[1]
@@ -128,14 +176,15 @@ class WikiTextKo(Dataset):
     """
 
     def __init__(self, root: str='.data'):
-        self.url = 'https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2'
         self.root = Path(root)
+        self.url = 'https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2'
         self.dirname = 'wikitext-ko'
+        self.out_filename = 'wiki.train'
         
-        # WikiExtractor
         self.url_wikiextractor = 'https://raw.githubusercontent.com/attardi/wikiextractor/master/WikiExtractor.py'
         self.wikiextractor = 'WikiExtractor.py'
-
+        
+        # Download
         if not (self.root/self.dirname).exists():
             self._download(to_path = self.root)
 
@@ -148,25 +197,38 @@ class WikiTextKo(Dataset):
         from_path = download_from_url(self.url, download_filename, to_path)
         
         # Extracts and cleans text from a Wikipedia database dump using WikiExtractor.
-        # WikiExtractor: https://github.com/attardi/wikiextractor
         wikiextractor_path = download_from_url(self.url_wikiextractor, self.wikiextractor, to_path)
         os.system(f'python {self.root/self.wikiextractor} -o {to_path/self.dirname} --json {from_path}')
         
+        Path(self.root/self.wikiextractor).unlink()
+        
     def _get_data(self) -> list:
-        dataset = []
-        filenames = [str(filename) for filename in (self.root/self.dirname).glob('**/wiki_*')]
-        for filename in sorted(filenames):
-            with open(filename, 'r', encoding='utf-8') as reader:
-                for line in reader.readlines(): # line = a document
-                    text = json.loads(line)['text'].strip()
-                    # split document into sentences(len > 0)
-                    samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
-                    dataset += samples
-                    # If sample is a document, use below code not above two lines.
-                    # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
-                    # dataset.append(sample)
+        out_path_train = self.root/self.dirname/self.out_filename
 
+        if out_path_train.exists():
+            train = load_language_modeling(out_path_train)
+            dataset = train
+        else:
+            dataset = []
+            filenames = [filename for filename in (self.root/self.dirname).glob('**/wiki_*')]
+            for filename in tqdm(sorted(filenames)):
+                with open(filename, 'r', encoding='utf-8') as reader:
+                    for line in reader.readlines():
+                        text = json.loads(line)['text'].strip()
+                        samples = list(filter(lambda x: len(x) > 0, text.split('\n'))) # split document into sentences(len > 0)
+                        samples = list(map(lambda x: x.strip(), samples))
+                        dataset += samples 
+                        # If sample is a document, use below code not above two lines.
+                        # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
+                        # dataset.append(sample)            
+            
+            # Save dataset
+            shutil.rmtree(self.root/self.dirname)
+            (self.root/self.dirname).mkdir()
+            save_language_modeling(dataset, to_path=out_path_train)
+            
         return dataset
+        
 
 class NamuWikiKo(Dataset):
     """NamuWiki database dump (Korean) for language modeling.
@@ -180,7 +242,7 @@ class NamuWikiKo(Dataset):
     Examples:
     >>> namuwikiko = prenlp.data.NamuWikiKo()
     >>> len(namuwikiko)
-    32362607
+    16288639
     >>> namuwikiko[0]
     (신 세계수의 미궁 2에서 뜬 !!아앗!!)
     >>> namuwikiko[1]
@@ -188,40 +250,41 @@ class NamuWikiKo(Dataset):
     """
 
     def __init__(self, root: str='.data'):
-        self.url = 'https://dataserver.xyz/wikidb/namuwiki190312.7z'
         self.root = Path(root)
+        self.url = 'https://dataserver.xyz/wikidb/namuwiki190312.7z'
         self.dirname = 'namuwiki_20190312.json'
-        self.normalize_dirname = 'namuwiki_20190312'
+        self.out_filename = 'namuwiki.train'
 
+        # Download
         if not (self.root/self.dirname).exists():
             super(NamuWikiKo, self)._download(to_path = self.root)
         
-        if not (self.root/self.normalize_dirname).exists():
-            # Save normalized dataset
-            with open(self.root/self.normalize_dirname, 'w', encoding='utf-8') as writer:
-                dataset = self._get_data()
-                for text in dataset:
-                    writer.write(text+'\n')
-            super(NamuWikiKo, self).__init__(dataset)
-        else:
-            with open(self.root/self.normalize_dirname, 'r', encoding='utf-8') as reader:
-                super(NamuWikiKo, self).__init__(reader.readlines())
+        super(NamuWikiKo, self).__init__(self._get_data())
         
     def _get_data(self) -> list:
-        dataset = []
-        with open(self.root/self.dirname, 'r', encoding='utf-8') as jfile:
-            for item in ijson.items(jfile, 'item'):
-                text = self._normalize(item['text']).strip()
-                # split document into sentences(len > 0)
-                samples = list(filter(lambda x: len(x) > 0, text.split('\n')))
-                dataset += samples
-                # If sample is a document, use below code not above two lines.
-                # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
-                # dataset.append(sample)
+        out_path_train = self.root/self.out_filename
 
+        if out_path_train.exists():
+            train = load_language_modeling(out_path_train)
+            dataset = train
+        else:
+            dataset = []
+            with open(self.root/self.dirname, 'r', encoding='utf-8') as jfile:
+                for item in tqdm(ijson.items(jfile, 'item')):
+                    text = self._normalize(item['text']).strip()
+                    samples = list(filter(lambda x: len(x) > 0, text.split('\n'))) # split document into sentences(len > 0)
+                    dataset += samples
+                    # If sample is a document, use below code not above two lines.
+                    # sample = '\n'.join(list(filter(lambda x: len(x) > 0, text.split('\n'))))
+                    # dataset.append(sample)
+                    
+            # Save dataset
+            (self.root/self.dirname).unlink()
+            save_language_modeling(dataset, to_path=out_path_train)
+            
         return dataset
     
-    def _normalize(self, text: str, repl: str='') -> str:
+    def _normalize(self, text: str, repl: str='', normalizer=Normalizer(emoji_repl=None)) -> str:
         """Return the normalized string.
         """
         regexs = [
@@ -253,6 +316,5 @@ class NamuWikiKo(Dataset):
             regex = re.compile(regex, re.MULTILINE)
             text = regex.sub(repl, text)
         
-        normalizer = Normalizer(emoji_repl=None)
         text = normalizer.normalize(text)
         return text

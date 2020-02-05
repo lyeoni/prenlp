@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from ..utils import download_from_url, unzip_archive
 
 class Dataset:
@@ -5,7 +7,7 @@ class Dataset:
     All datasets(sub-classes) should inherit.
 
     Args:
-        data (list, array, tuple): dataset like object
+        data (list, array, tuple): dataset-like object
     """
 
     def __init__(self, data):
