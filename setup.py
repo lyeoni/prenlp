@@ -17,7 +17,7 @@ setuptools.setup(
     install_requires                = [
         'nltk==3.2.5', 'konlpy', 'sentencepiece',   # Tokenizer
         'fasttext',                                 # Model
-        'ijson', 'py7zr==0.5b5'                     # Utils
+        'ijson', 'py7zr==0.20.2'                     # Utils
     ],
     package_data                    = {},
     keywords                        = [
